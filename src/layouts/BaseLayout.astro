@@ -1,0 +1,39 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  showPattern?: boolean;
+}
+
+const {
+  title = "Daniel Chen | Backend Software Engineer (C# / .NET)",
+  description = "Software engineer with a strong background in C#, .NET Core/Framework, and SQL, primarily focused on backend development. Taiwan Employment Gold Card holder seeking software engineering opportunities in Taiwan.",
+  showPattern = true,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="relative flex flex-col w-full min-h-dvh justify-start items-center bg-background text-foreground antialiased selection:bg-primary selection:text-white">
+    <Header />
+    <main class={`relative w-full flex flex-col justify-start items-center flex-1 ${showPattern ? "pattern" : ""}`}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

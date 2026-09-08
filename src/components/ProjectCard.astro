@@ -1,0 +1,155 @@
+---
+interface Props {
+  project: {
+    id: string;
+    data: {
+      title: string;
+      description: string;
+      publishDate?: Date;
+      tags: string[];
+      liveUrl?: string;
+      githubUrl?: string;
+      featured?: boolean;
+      company?: string;
+      companyUrl?: string;
+      role?: string;
+      badge?: string;
+      isCommercial?: boolean;
+      isClosedSource?: boolean;
+      inProgress?: boolean;
+      image?: string;
+      imageAlt?: string;
+    };
+  };
+}
+
+const { project } = Astro.props;
+const formattedDate = project.data.publishDate
+  ? project.data.publishDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+    })
+  : null;
+---
+
+<article class="group bg-card border border-border rounded-2xl p-6 flex flex-col justify-between hover:border-primary/40 transition-all duration-300 perfect-shadow">
+  <div class="flex flex-col gap-3">
+    {project.data.image && (
+      <div class="w-full flex justify-center mb-1">
+        <a
+          href={`/projects/${project.id}`}
+          class="block overflow-hidden rounded-xl border border-border/80 bg-muted/40 w-full max-w-[50%] max-h-36 aspect-[16/10] group-hover:border-primary/40 transition-colors"
+        >
+          <img
+            src={project.data.image}
+            alt={project.data.imageAlt || project.data.title}
+            loading="lazy"
+            class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+          />
+        </a>
+      </div>
+    )}
+    <div class="flex items-center justify-between text-xs text-muted-foreground">
+      <div class="flex items-center gap-2">
+        {formattedDate && project.data.publishDate && (
+          <time datetime={project.data.publishDate.toISOString()}>
+            {formattedDate}
+          </time>
+        )}
+        {project.data.company && (
+          project.data.companyUrl ? (
+            <a
+              href={project.data.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/20 transition-colors"
+            >
+              🏢 {project.data.company} ↗
+            </a>
+          ) : (
+            <span class="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+              🏢 {project.data.company}
+            </span>
+          )
+        )}
+      </div>
+      <div class="flex items-center gap-1.5">
+        {project.data.inProgress && (
+          <span class="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            In Progress
+          </span>
+        )}
+        {project.data.featured && (
+          <span class="inline-flex items-center gap-1 text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+            Featured
+          </span>
+        )}
+      </div>
+    </div>
+
+    <h3 class="text-xl font-medium tracking-tight text-foreground group-hover:text-primary transition-colors">
+      <a href={`/projects/${project.id}`}>{project.data.title}</a>
+    </h3>
+
+    <p class="text-muted-foreground text-sm font-light leading-relaxed line-clamp-3">
+      {project.data.description}
+    </p>
+
+    <div class="flex flex-wrap gap-1.5 mt-2">
+      {project.data.tags.map((tag) => (
+        <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-accent text-foreground font-medium">
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between pt-5 mt-5 text-sm font-medium border-t border-border">
+    <a href={`/projects/${project.id}`} class="text-primary hover:underline flex items-center gap-1">
+      View Project →
+    </a>
+    <div class="flex items-center gap-3">
+      {project.data.liveUrl && (
+        <a
+          href={project.data.liveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground hover:text-foreground text-xs"
+        >
+          Demo ↗
+        </a>
+      )}
+      {project.data.githubUrl ? (
+        <a
+          href={project.data.githubUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground hover:text-foreground text-xs"
+        >
+          Code ↗
+        </a>
+      ) : project.data.isCommercial ? (
+        <div class="flex items-center gap-2.5">
+          {project.data.companyUrl && (
+            <a
+              href={project.data.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-amber-700/80 hover:text-amber-700 text-xs font-normal"
+            >
+              zeekit.no ↗
+            </a>
+          )}
+          <span class="text-muted-foreground/70 text-xs italic">
+            Commercial IP
+          </span>
+        </div>
+      ) : project.data.isClosedSource ? (
+        <span class="text-muted-foreground/70 text-xs italic">
+          Closed Source
+        </span>
+      ) : null}
+    </div>
+  </div>
+</article>

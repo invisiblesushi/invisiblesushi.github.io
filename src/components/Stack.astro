@@ -1,0 +1,47 @@
+---
+const logos = [
+  { src: "/logos/csharp.svg", alt: "C#" },
+  { src: "/logos/dotnet.svg", alt: ".NET Core" },
+  { src: "/logos/sqlserver.svg", alt: "MS SQL Server" },
+  { src: "/logos/cursor.svg", alt: "Cursor" },
+  { src: "/logos/gpt.svg", alt: "GPT" },
+  { src: "/logos/copilot.svg", alt: "GitHub Copilot" },
+  { src: "/logos/linux.svg", alt: "Linux" },
+  { src: "/logos/vultr.svg", alt: "Vultr" },
+  { src: "/logos/android.svg", alt: "Android" },
+  { src: "/logos/python.svg", alt: "Python" },
+  { src: "/logos/java.svg", alt: "Java" },
+  { src: "/logos/javascript.svg", alt: "JavaScript" },
+  { src: "/logos/jenkins.svg", alt: "Jenkins" },
+  { src: "/logos/git.svg", alt: "Git" },
+  { src: "/logos/azure.svg", alt: "Azure" },
+];
+---
+
+<section class="relative w-full text-center flex flex-col justify-center items-center gap-4 px-4 py-8 sm:py-8 pointer-events-none">
+  <h2 class="w-full max-w-xl sm:text-center text-2xl sm:text-3xl md:text-4xl font-medium tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-br from-primary via-foreground to-foreground">
+    Core Backend Stack & Technologies
+  </h2>
+  <p class="w-full max-w-xl text-muted-foreground sm:text-center text-sm sm:text-base md:text-lg font-light tracking-tight text-balance">
+    C#, .NET, MS SQL Server, Linux servers, and AI-accelerated engineering workflows (Cursor, GPT, Copilot).
+  </p>
+  <div class="w-full h-fit max-w-2xl flex flex-col justify-center select-none overflow-hidden gradient-mask mt-4">
+    <div class="w-max flex flex-nowrap gap-12 sm:gap-16 animate-slide-logos py-4">
+      {
+        logos.concat(logos).map((logo) => (
+          <div class="flex flex-col items-center justify-center gap-2 w-20 opacity-85 hover:opacity-100 transition-opacity">
+            <img
+              src={logo.src}
+              alt={logo.alt}
+              width="36"
+              height="36"
+              loading="eager"
+              class="h-9 w-9 object-contain"
+            />
+            <span class="text-[11px] font-medium text-muted-foreground whitespace-nowrap">{logo.alt}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

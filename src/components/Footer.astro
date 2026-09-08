@@ -1,0 +1,51 @@
+---
+const socials = [
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/danielch045221182/" },
+  { label: "GitHub", url: "https://github.com/invisiblesushi" },
+  { label: "Projects", url: "/projects" },
+];
+---
+
+<footer class="w-full max-w-screen-2xl bg-foreground text-white px-4 pt-12 pb-12 flex flex-col gap-8 justify-between items-center border-t border-dark-border">
+  <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-5xl gap-4 text-sm text-gray-400">
+    <span class="flex items-center gap-2 font-medium text-white">
+      Daniel Chen · C# / .NET Software Engineer
+    </span>
+    <div class="flex flex-wrap gap-6 items-center">
+      {
+        socials.map((social) => (
+          <a
+            href={social.url}
+            target={social.url.startsWith("http") ? "_blank" : undefined}
+            rel={social.url.startsWith("http") ? "noopener noreferrer" : undefined}
+            class="group flex items-center gap-1 text-gray-400 text-sm font-medium hover:text-white transition-colors"
+          >
+            {social.label}
+            {social.url.startsWith("http") && (
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="opacity-60 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all"
+              >
+                <path
+                  d="M3.64645 11.3536C3.45118 11.1583 3.45118 10.8417 3.64645 10.6465L10.2929 4L6 4C5.72386 4 5.5 3.77614 5.5 3.5C5.5 3.22386 5.72386 3 6 3L11.5 3C11.6326 3 11.7598 3.05268 11.8536 3.14645C11.9473 3.24022 12 3.36739 12 3.5L12 9.00001C12 9.27615 11.7761 9.50001 11.5 9.50001C11.2239 9.50001 11 9.27615 11 9.00001V4.70711L4.35355 11.3536C4.15829 11.5488 3.84171 11.5488 3.64645 11.3536Z"
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            )}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="w-full max-w-5xl pt-6 border-t border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
+    <span>© {new Date().getFullYear()} Daniel Chen. All rights reserved.</span>
+    <span>Built with Astro & Tailwind CSS</span>
+  </div>
+</footer>

@@ -1,0 +1,178 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const formattedDate = project.data.publishDate
+  ? project.data.publishDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  : null;
+---
+
+<BaseLayout
+  title={`${project.data.title} | Projects`}
+  description={project.data.description}
+>
+  <article class="w-full max-w-3xl px-4 py-16 sm:py-20 flex flex-col">
+    <nav class="mb-8">
+      <a href="/projects" class="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+        ← Back to all projects
+      </a>
+    </nav>
+
+    <header class="flex flex-col gap-4 mb-10 pb-8 border-b border-border">
+      {(formattedDate || project.data.company || project.data.inProgress) && (
+        <div class="flex flex-wrap items-center gap-3">
+          {formattedDate && project.data.publishDate && (
+            <time class="text-xs font-semibold tracking-wider text-primary uppercase" datetime={project.data.publishDate.toISOString()}>
+              {formattedDate}
+            </time>
+          )}
+          {project.data.company && (
+            project.data.companyUrl ? (
+              <a
+                href={project.data.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-500/10 hover:bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/20 transition-colors"
+              >
+                🏢 {project.data.company} {project.data.role ? `· ${project.data.role}` : ""} ↗
+              </a>
+            ) : (
+              <span class="inline-flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+                🏢 {project.data.company} {project.data.role ? `· ${project.data.role}` : ""}
+              </span>
+            )
+          )}
+          {project.data.inProgress && (
+            <span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-700 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Under Development
+            </span>
+          )}
+        </div>
+      )}
+
+      <h1 class="text-3xl sm:text-5xl font-medium tracking-tighter text-pretty text-foreground">
+        {project.data.title}
+      </h1>
+      <p class="text-muted-foreground text-base sm:text-lg font-light leading-relaxed">
+        {project.data.description}
+      </p>
+
+      <div class="flex flex-wrap gap-2 mt-2">
+        {project.data.tags.map((tag) => (
+          <span class="text-xs px-3 py-1 rounded-full bg-accent text-foreground font-medium">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {project.data.isCommercial && (
+        <div class="mt-2 p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-900 text-xs sm:text-sm flex flex-col gap-1">
+          <span class="font-semibold flex items-center gap-1.5 text-amber-950">
+            🔒 Commercial Enterprise Project
+          </span>
+          <p class="text-amber-900/90 leading-relaxed font-light">
+            This project reflects commercial backend engineering work performed at{" "}
+            {project.data.companyUrl ? (
+              <a
+                href={project.data.companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-semibold underline hover:text-amber-950"
+              >
+                {project.data.company || "Zeekit AS"} ({project.data.companyUrl.replace(/^https?:\/\//, "")}) ↗
+              </a>
+            ) : (
+              <strong>{project.data.company || "Zeekit AS"}</strong>
+            )}
+            . In accordance with intellectual property and confidentiality standards, underlying source code and proprietary client databases are withheld; discussion is focused on architectural design patterns, data flow, and problem-solving methodologies.
+          </p>
+        </div>
+      )}
+
+      {project.data.isClosedSource && !project.data.isCommercial && (
+        <div class="mt-2 p-4 rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-950 text-xs sm:text-sm flex flex-col gap-1">
+          <span class="font-semibold flex items-center gap-1.5 text-sky-950">
+            🔒 Closed Source · Work in Progress
+          </span>
+          <p class="text-sky-900/90 leading-relaxed font-light">
+            This system is currently under active development as a closed-source solution. The repository and source code are private. Architectural documentation, tech stack notes, and milestones are outlined below as progress continues.
+          </p>
+        </div>
+      )}
+
+      <div class="flex flex-wrap gap-3 items-center pt-4">
+        {project.data.companyUrl && (
+          <a
+            href={project.data.companyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative w-fit flex justify-center items-center px-4 py-2 text-sm font-medium text-amber-900 bg-amber-500/15 border border-amber-500/30 rounded-full hover:bg-amber-500/25 transition-all hover:-translate-y-0.5"
+          >
+            Visit {project.data.company || "Zeekit"} (zeekit.no) ↗
+          </a>
+        )}
+        {project.data.liveUrl && (
+          <a
+            href={project.data.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="relative w-fit flex justify-center items-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-full perfect-shadow hover:-translate-y-0.5 transition-transform"
+          >
+            Live Demo ↗
+            <div
+              class="z-[-1] bg-gradient-to-b from-secondary via-primary to-primary absolute w-[calc(100%-4px)] h-[calc(100%-4px)] rounded-full border-t-2 border-secondary"
+            >
+            </div>
+          </a>
+        )}
+        {project.data.githubUrl ? (
+          <a
+            href={project.data.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-fit flex justify-center items-center px-4 py-2 text-sm font-medium text-foreground bg-card border border-border rounded-full hover:bg-muted transition-all hover:-translate-y-0.5"
+          >
+            View Code ↗
+          </a>
+        ) : project.data.isCommercial ? (
+          <span class="text-xs text-muted-foreground italic px-3 py-1.5 rounded-full bg-muted border border-border">
+            Proprietary Codebase (Internal Enterprise Repository)
+          </span>
+        ) : project.data.isClosedSource ? (
+          <span class="text-xs text-muted-foreground italic px-3 py-1.5 rounded-full bg-muted border border-border">
+            Closed Source · Private Repository
+          </span>
+        ) : null}
+      </div>
+    </header>
+
+    <div class="prose max-w-none">
+      <Content />
+    </div>
+
+    <footer class="mt-16 pt-8 border-t border-border flex justify-between items-center text-sm">
+      <a href="/projects" class="text-primary font-medium hover:underline">
+        ← Back to all projects
+      </a>
+      <a href="#top" class="text-muted-foreground hover:text-foreground text-xs">
+        Back to top ↑
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

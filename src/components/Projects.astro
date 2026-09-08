@@ -1,0 +1,335 @@
+---
+import { getCollection } from "astro:content";
+
+const allProjects = await getCollection("projects");
+const sortedProjects = allProjects.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  if (a.data.order !== undefined && b.data.order !== undefined) {
+    return a.data.order - b.data.order;
+  }
+  const dateA = a.data.publishDate ? a.data.publishDate.getTime() : 0;
+  const dateB = b.data.publishDate ? b.data.publishDate.getTime() : 0;
+  return dateB - dateA;
+});
+
+const project1 = sortedProjects[0];
+const project2 = sortedProjects[1];
+const project3 = sortedProjects[2];
+
+const highlights = [
+  {
+    title: "C# & .NET Architecture",
+    desc: "Clean separation of concerns, dependency injection, and maintainable services.",
+  },
+  {
+    title: "Database Performance",
+    desc: "MS SQL Server schema design, optimized T-SQL queries, and Entity Framework data access.",
+  },
+  {
+    title: "CI/CD Automation",
+    desc: "Automated build, test, and release pipelines configured with Jenkins and Octopus Deploy.",
+  },
+  {
+    title: "System Integration",
+    desc: "Robust communication bridging distributed platforms via REST, SOAP, JSON, and XML.",
+  },
+];
+---
+
+<section class="relative overflow-hidden bg-foreground w-full max-w-screen-2xl text-center flex flex-col justify-center items-center gap-10 px-4 py-20 sm:py-24 text-white">
+  <div class="bg-white/10 absolute size-80 top-[-160px] blur-[150px] rounded-full pointer-events-none"></div>
+
+  <div class="z-10 flex flex-col gap-2 max-w-xl">
+    <h2 class="w-full text-2xl sm:text-4xl md:text-5xl font-medium tracking-tighter text-pretty bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-gray-400">
+      Projects & Past work
+    </h2>
+    <p class="w-full bg-clip-text text-transparent bg-gradient-to-b from-white/90 to-gray-400 text-sm sm:text-base md:text-lg font-light tracking-tight">
+      Focus on C#, .NET, MS SQL Server, and scalable API design.
+    </p>
+  </div>
+
+  <div class="z-10 w-full max-w-5xl grid grid-cols-1 md:grid-cols-5 gap-3 text-left">
+    {project1 && (
+      <article class="overflow-hidden relative bg-dark-card col-span-1 md:col-span-3 border border-dark-border rounded-2xl p-6 flex flex-col justify-between hover:border-gray-600 transition-all min-h-[280px]">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-secondary">Featured Project</span>
+              {project1.data.company && (
+                project1.data.companyUrl ? (
+                  <a
+                    href={project1.data.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-[10px] font-medium text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 px-2 py-0.5 rounded-full transition-colors flex items-center gap-1"
+                  >
+                    🏢 {project1.data.company} ↗
+                  </a>
+                ) : (
+                  <span class="text-[10px] font-medium text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                    🏢 {project1.data.company}
+                  </span>
+                )
+              )}
+            </div>
+            {project1.data.publishDate && (
+              <span class="text-xs text-gray-400">{project1.data.publishDate.getFullYear()}</span>
+            )}
+          </div>
+          <h3 class="text-xl sm:text-2xl font-medium tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-secondary">
+            <a href={`/projects/${project1.id}`} class="hover:underline">{project1.data.title}</a>
+          </h3>
+          <p class="text-gray-300 text-sm sm:text-base font-light line-clamp-3">
+            {project1.data.description}
+          </p>
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            {project1.data.tags.slice(0, 5).map((tag) => (
+              <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-gray-200">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-6 mt-auto text-sm font-medium border-t border-dark-border">
+          <a href={`/projects/${project1.id}`} class="text-secondary hover:underline flex items-center gap-1">
+            View Project →
+          </a>
+          <div class="flex items-center gap-3">
+            {project1.data.liveUrl && (
+              <a href={project1.data.liveUrl} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                Demo ↗
+              </a>
+            )}
+            {project1.data.githubUrl ? (
+              <a href={project1.data.githubUrl} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                GitHub ↗
+              </a>
+            ) : project1.data.isCommercial ? (
+              <div class="flex items-center gap-2">
+                {project1.data.companyUrl && (
+                  <a
+                    href={project1.data.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-amber-300/80 hover:text-amber-300 text-xs"
+                  >
+                    zeekit.no ↗
+                  </a>
+                )}
+                <span class="text-gray-500 text-xs italic">
+                  Enterprise IP
+                </span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </article>
+    )}
+
+    <!-- Interactive Tilt Badges Bento Card -->
+    <article class="overflow-hidden group bg-dark-card col-span-1 md:col-span-2 border border-dark-border rounded-2xl p-6 flex flex-col gap-3 justify-center items-center min-h-[280px]">
+      <div class="w-fit rounded-full bg-white text-black px-4 py-2 flex justify-center items-center rotate-6 group-hover:rotate-0 transition-all duration-300 shadow-md">
+        <span class="text-sm sm:text-base font-medium tracking-tight">⚡ C# & .NET Core</span>
+      </div>
+      <div class="w-fit rounded-full bg-white text-black px-4 py-2 flex justify-center items-center -rotate-6 group-hover:rotate-0 transition-all duration-300 shadow-md">
+        <span class="text-sm sm:text-base font-medium tracking-tight">🗄️ MS SQL Server</span>
+      </div>
+      <div class="w-fit rounded-full bg-white text-black px-4 py-2 flex justify-center items-center rotate-3 group-hover:rotate-0 transition-all duration-300 shadow-md">
+        <span class="text-sm sm:text-base font-medium tracking-tight">🐧 Linux & Vultr VPS</span>
+      </div>
+      <div class="w-fit rounded-full bg-white text-black px-4 py-2 flex justify-center items-center -rotate-3 group-hover:rotate-0 transition-all duration-300 shadow-md">
+        <span class="text-sm sm:text-base font-medium tracking-tight">🇹🇼 Taiwan Gold Card</span>
+      </div>
+    </article>
+
+    <!-- Highlights Vertical Scroll Carousel -->
+    <article class="overflow-hidden bg-dark-card col-span-1 md:col-span-2 border border-dark-border rounded-2xl p-6 flex flex-col justify-center min-h-[280px] group">
+      <div class="w-full max-h-[240px] flex flex-col justify-center select-none overflow-hidden">
+        <div class="w-full flex flex-col gap-4 animate-vertical-slide group-hover:[animation-play-state:paused]">
+          {highlights.concat(highlights).map((item) => (
+            <div class="p-3.5 rounded-xl border border-dark-border bg-white/[0.04] flex flex-col gap-1">
+              <span class="text-xs font-semibold text-secondary uppercase tracking-wider">{item.title}</span>
+              <p class="text-xs text-gray-300 font-light">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </article>
+
+    {project2 && (
+      <article class="overflow-hidden relative bg-dark-card col-span-1 md:col-span-3 border border-dark-border rounded-2xl p-6 flex flex-col justify-between hover:border-gray-600 transition-all min-h-[280px]">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-secondary">Featured Project</span>
+              {project2.data.company && (
+                project2.data.companyUrl ? (
+                  <a
+                    href={project2.data.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-[10px] font-medium text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 px-2 py-0.5 rounded-full transition-colors flex items-center gap-1"
+                  >
+                    🏢 {project2.data.company} ↗
+                  </a>
+                ) : (
+                  <span class="text-[10px] font-medium text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                    🏢 {project2.data.company}
+                  </span>
+                )
+              )}
+            </div>
+            {project2.data.publishDate && (
+              <span class="text-xs text-gray-400">{project2.data.publishDate.getFullYear()}</span>
+            )}
+          </div>
+          <h3 class="text-xl sm:text-2xl font-medium tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-secondary">
+            <a href={`/projects/${project2.id}`} class="hover:underline">{project2.data.title}</a>
+          </h3>
+          <p class="text-gray-300 text-sm sm:text-base font-light line-clamp-3">
+            {project2.data.description}
+          </p>
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            {project2.data.tags.slice(0, 5).map((tag) => (
+              <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-gray-200">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-6 mt-auto text-sm font-medium border-t border-dark-border">
+          <a href={`/projects/${project2.id}`} class="text-secondary hover:underline flex items-center gap-1">
+            View Project →
+          </a>
+          <div class="flex items-center gap-3">
+            {project2.data.liveUrl && (
+              <a href={project2.data.liveUrl} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                Demo ↗
+              </a>
+            )}
+            {project2.data.githubUrl ? (
+              <a href={project2.data.githubUrl} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                GitHub ↗
+              </a>
+            ) : project2.data.isCommercial ? (
+              <div class="flex items-center gap-2">
+                {project2.data.companyUrl && (
+                  <a
+                    href={project2.data.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-amber-300/80 hover:text-amber-300 text-xs"
+                  >
+                    zeekit.no ↗
+                  </a>
+                )}
+                <span class="text-gray-500 text-xs italic">
+                  Enterprise IP
+                </span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </article>
+    )}
+
+    {project3 && (
+      <article class="overflow-hidden relative bg-dark-card col-span-1 md:col-span-3 border border-dark-border rounded-2xl p-6 flex flex-col justify-between hover:border-gray-600 transition-all min-h-[280px]">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold uppercase tracking-wider text-secondary">Project</span>
+              {project3.data.company && (
+                project3.data.companyUrl ? (
+                  <a
+                    href={project3.data.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-[10px] font-medium text-amber-300 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 px-2 py-0.5 rounded-full transition-colors flex items-center gap-1"
+                  >
+                    🏢 {project3.data.company} ↗
+                  </a>
+                ) : (
+                  <span class="text-[10px] font-medium text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                    🏢 {project3.data.company}
+                  </span>
+                )
+              )}
+            </div>
+            {project3.data.publishDate && (
+              <span class="text-xs text-gray-400">{project3.data.publishDate.getFullYear()}</span>
+            )}
+          </div>
+          <h3 class="text-xl sm:text-2xl font-medium tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-secondary">
+            <a href={`/projects/${project3.id}`} class="hover:underline">{project3.data.title}</a>
+          </h3>
+          <p class="text-gray-300 text-sm sm:text-base font-light line-clamp-3">
+            {project3.data.description}
+          </p>
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            {project3.data.tags.slice(0, 5).map((tag) => (
+              <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/10 text-gray-200">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-6 mt-auto text-sm font-medium border-t border-dark-border">
+          <a href={`/projects/${project3.id}`} class="text-secondary hover:underline flex items-center gap-1">
+            View Project →
+          </a>
+          <div class="flex items-center gap-3">
+            {project3.data.liveUrl && (
+              <a href={project3.data.liveUrl} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                Demo ↗
+              </a>
+            )}
+            {project3.data.githubUrl ? (
+              <a href={project3.data.githubUrl} target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                GitHub ↗
+              </a>
+            ) : project3.data.isCommercial ? (
+              <div class="flex items-center gap-2">
+                {project3.data.companyUrl && (
+                  <a
+                    href={project3.data.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-amber-300/80 hover:text-amber-300 text-xs"
+                  >
+                    zeekit.no ↗
+                  </a>
+                )}
+                <span class="text-gray-500 text-xs italic">
+                  Enterprise IP
+                </span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </article>
+    )}
+
+    <!-- Let's work together Bento Card -->
+    <article class="overflow-hidden bg-dark-card col-span-1 md:col-span-2 border border-dark-border rounded-2xl p-6 flex flex-col gap-4 justify-center items-center text-center min-h-[280px]">
+      <h3 class="text-xl sm:text-2xl font-medium tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-secondary">
+        Looking for a C# Engineer?
+      </h3>
+      <p class="text-gray-400 text-xs sm:text-sm font-light max-w-xs">
+        Seeking software engineering opportunities in Taiwan. Let's discuss how I can contribute to your engineering team.
+      </p>
+      <a
+        href="https://www.linkedin.com/in/danielch045221182/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-fit flex gap-2 justify-center items-center px-5 py-2 text-sm font-medium text-white bg-primary rounded-full hover:brightness-110 transition-all perfect-shadow"
+      >
+        Connect on LinkedIn
+      </a>
+    </article>
+  </div>
+
+  <div class="z-10 mt-2">
+    <a href="/projects" class="inline-flex items-center gap-2 text-sm text-secondary hover:underline font-medium">
+      View full project archive ({allProjects.length}) →
+    </a>
+  </div>
+</section>
