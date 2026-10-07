@@ -176,6 +176,12 @@
   object-fit: contain;
 }
 
+.prose figure.wide img {
+  max-width: 100%;
+  max-height: none;
+  width: 100%;
+}
+
 .prose figcaption {
   font-size: 0.825rem;
   color: #6b7280;
